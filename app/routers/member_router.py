@@ -1,17 +1,27 @@
-from fastapi import APIRouter
-from typing import List
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
+from app.db.session import SessionLocal
 from app.schemas.member import Member, MemberCreate
 from app.models.member import MemberModel
 from app.services.member_service import create_member, list_members
 
 router = APIRouter()
 
-@router.post("/members", response_model=Member)
-def create_member_endpoint(member: MemberCreate):
-    new_member = MemberModel(**member.model_dump())
-    return create_member(new_member)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-@router.get("/members", response_model=List[Member])
-def list_members_endpoint():
-    return list_members()
+
+@router.post("/members", response_model=Member)
+def create_member_endpoint(member: MemberCreate, db: Session = Depends(get_db)):
+    new_member = MemberModel(**member.model_dump())
+    return create_member(db, new_member)
+
+
+@router.get("/members", response_model=list[Member])
+def list_members_endpoint(db: Session = Depends(get_db)):
+    return list_members(db)
