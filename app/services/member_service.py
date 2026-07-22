@@ -1,11 +1,11 @@
-from typing import List
+from sqlalchemy.orm import Session
 from app.models.member import MemberModel
 
-members_db: List[MemberModel] = []
-
-def create_member(member: MemberModel) -> MemberModel:
-    members_db.append(member)
+def create_member(db: Session, member: MemberModel) -> MemberModel:
+    db.add(member)
+    db.commit()
+    db.refresh(member)
     return member
 
-def list_members() -> List[MemberModel]:
-    return members_db
+def list_members(db: Session):
+    return db.query(MemberModel).all()
