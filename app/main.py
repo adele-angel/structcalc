@@ -4,6 +4,11 @@ from app.routers.calc_router import router as calc_router
 
 app = FastAPI()
 
+from app.db.session import engine
+from app.db.base import Base
+
+Base.metadata.create_all(bind=engine)
+
 @app.get("/")
 def read_root():
     return {"message": "StructCalc API is running"}
