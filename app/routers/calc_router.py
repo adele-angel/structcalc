@@ -15,7 +15,7 @@ from app.services.calc_service import (
 router = APIRouter()
 
 
-@router.post("/calc/bending", response_model=BendingResponse)
+@router.post("/bending", response_model=BendingResponse)
 def bending_endpoint(data: BendingRequest):
     result = calculate_bending_capacity(
         wy_cm3=data.wy_cm3,
@@ -24,7 +24,7 @@ def bending_endpoint(data: BendingRequest):
     return BendingResponse(moment_capacity_kNm=result)
 
 
-@router.post("/calc/deflection", response_model=DeflectionResponse)
+@router.post("/deflection", response_model=DeflectionResponse)
 def deflection_endpoint(data: DeflectionRequest):
     result = calculate_deflection(
         load_kN=data.load_kN,
