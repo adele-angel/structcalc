@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.db.session import SessionLocal
 from app.schemas.member import Member, MemberCreate
 from app.models.member import MemberModel
 from app.services.member_service import create_member, list_members
@@ -9,6 +8,10 @@ from app.services.member_service import create_member, list_members
 router = APIRouter()
 
 def get_db():
+    # IMPORTANT: import SessionLocal INSIDE the function
+    # so pytest can override this dependency
+    from app.db.session import SessionLocal
+
     db = SessionLocal()
     try:
         yield db

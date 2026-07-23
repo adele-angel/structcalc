@@ -1,13 +1,20 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# Detect pytest explicitly
 TESTING = os.getenv("TESTING") == "1"
 
 if TESTING:
-    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+pysqlite:///:memory:")
-    engine = create_engine(DATABASE_URL, echo=False)
+    DATABASE_URL = "sqlite+pysqlite:///:memory:?cache=shared"
+    engine = create_engine(
+        DATABASE_URL,
+        echo=False,
+        connect_args={"check_same_thread": False}
+    )
 else:
     DATABASE_URL = os.getenv("DATABASE_URL")
     if not DATABASE_URL:

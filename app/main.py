@@ -1,18 +1,25 @@
-import os
 from fastapi import FastAPI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Routers
 from app.routers.member_router import router as member_router
 from app.routers.calc_router import router as calc_router
 
-app = FastAPI()
 
-from app.db.session import engine
-from app.db.base import Base
+def create_app() -> FastAPI:
+    app = FastAPI()
 
-Base.metadata.create_all(bind=engine)
+    @app.get("/")
+    def root():
+        return {"status": "ok", "message": "StructCalc API running"}
 
-@app.get("/")
-def read_root():
-    return {"message": "StructCalc API is running"}
+    # Include routers WITH prefixes
+    app.include_router(member_router, prefix="/members")
+    app.include_router(calc_router, prefix="/calc")
 
-app.include_router(member_router)
-app.include_router(calc_router)
+    return app
+
+
+app = create_app()
