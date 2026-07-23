@@ -6,11 +6,13 @@ client = TestClient(app)
 def test_root_endpoint():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"message": "StructCalc API is running"}
+    assert response.json() == {
+        "status": "ok",
+        "message": "StructCalc API running"
+    }
 
 def test_create_member():
     payload = {
-        "id": 1,
         "name": "Beam A",
         "length_m": 5.0
     }
