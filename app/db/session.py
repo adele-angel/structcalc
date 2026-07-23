@@ -1,16 +1,14 @@
 import os
 from dotenv import load_dotenv
-
-# Load environment variables BEFORE reading TESTING or DATABASE_URL
-load_dotenv()
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+load_dotenv()
 
 TESTING = os.getenv("TESTING") == "1"
 
 if TESTING:
-    DATABASE_URL = "sqlite+pysqlite:///:memory:?cache=shared"
+    DATABASE_URL = "sqlite:///./test.db"
     engine = create_engine(
         DATABASE_URL,
         echo=False,

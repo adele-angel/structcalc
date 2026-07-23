@@ -1,7 +1,13 @@
 from fastapi.testclient import TestClient
-from app.main import app
+from app.main import create_app
 
-client = TestClient(app)
+def get_client():
+    # Create the app AFTER TESTING=1 is set
+    app = create_app()
+    return TestClient(app)
+
+client = get_client()
+
 
 def test_root_endpoint():
     response = client.get("/")
@@ -11,6 +17,7 @@ def test_root_endpoint():
         "message": "StructCalc API running"
     }
 
+
 def test_create_member():
     payload = {
         "name": "Beam A",
@@ -19,7 +26,12 @@ def test_create_member():
 
     response = client.post("/members", json=payload)
     assert response.status_code == 200
-    assert response.json()["name"] == "Beam A"
+    data = response.json()
+
+    assert data["name"] == "Beam A"
+    assert data["length_m"] == 5.0
+    assert "id" in data
+
 
 def test_list_members():
     response = client.get("/members")
