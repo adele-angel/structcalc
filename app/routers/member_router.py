@@ -19,12 +19,12 @@ def get_db():
         db.close()
 
 
-@router.post("/members", response_model=Member)
+@router.post("/", response_model=Member)
 def create_member_endpoint(member: MemberCreate, db: Session = Depends(get_db)):
     new_member = MemberModel(**member.model_dump())
     return create_member(db, new_member)
 
 
-@router.get("/members", response_model=list[Member])
+@router.get("/", response_model=list[Member])
 def list_members_endpoint(db: Session = Depends(get_db)):
     return list_members(db)
