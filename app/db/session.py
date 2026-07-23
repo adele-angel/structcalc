@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+# Load environment variables BEFORE reading TESTING or DATABASE_URL
 load_dotenv()
 
 from sqlalchemy import create_engine
