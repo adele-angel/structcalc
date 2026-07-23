@@ -7,5 +7,5 @@ def create_member(db: Session, member: MemberModel) -> MemberModel:
     db.refresh(member)
     return member
 
-def list_members(db: Session):
+def list_members(db: Session) -> list[MemberModel]:
     return db.query(MemberModel).all()
