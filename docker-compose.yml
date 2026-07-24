@@ -1,32 +1,12 @@
+version: "3.9"
+
 services:
-  structcalc:
+  api:
     build: .
-    container_name: structcalc_app
+    container_name: structcalc_api
     ports:
       - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://adele:supersecret@db:5432/structcalc
-    restart: unless-stopped
-
-  db:
-    image: postgres:15
-    container_name: structcalc_db
-    environment:
-      POSTGRES_USER: adele
-      POSTGRES_PASSWORD: supersecret
-      POSTGRES_DB: structcalc
-    ports:
-      - "5432:5432"
+      - TESTING=0
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U adele -d structcalc"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  postgres_data:
+      - .:/app
